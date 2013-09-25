@@ -2,6 +2,7 @@ import os
 import requests
 import time
 import urllib
+from flask_oauthlib.client import OAuth
 from flask import Flask, request
 
 app = Flask(__name__)   # create our flask app
@@ -22,7 +23,8 @@ def sign_request(base_signature):
 def index():
     curr_time = int(time.mktime(time.gmtime()))
 
-    payload = {'oauth_nonce': 'abc' + str(curr_time),
+    payload = {'oauth_consumer_key': 'e5631275a75f4efa955a4f2fc2508706',
+                      'oauth_nonce': 'abc' + str(curr_time),
                       'oauth_signature_method': 'HMAC-SHA1',
                       'oauth_timestamp':  curr_time,
                       'oauth_version': 1.0,
@@ -37,6 +39,8 @@ def index():
     signature_text = 'POST&http%3A%2F%2Fplatform.fatsecret.com%2Frest%2Fserver.api&' + urllib.quote(urllib.urlencode(sig_subtext))
     payload['oauth_signature'] = urllib.quote(sign_request(signature_text))
     r = requests.post("http://platform.fatsecret.com/rest/server.api", data=payload)
+    print signature_text
+    print r.text
 
     return "<p>" + r.text+ "</p>"
 
