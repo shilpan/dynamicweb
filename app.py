@@ -30,19 +30,6 @@ def index():
                       'food_id': 33691,
                       'method': 'food.get'}
 
-    # oauth = OAuth()
-    # fat_secret = oauth.remote_app(
-    #     'fat_secret',
-    #     consumer_key='e5631275a75f4efa955a4f2fc2508706',
-    #     consumer_secret='fb23f2f838dd4a009a70ccb7f283f138',
-    #     request_token_params = payload
-    #     base_url='https://api.twitter.com/1/',
-    #     request_token_url='https://api.twitter.com/oauth/request_token',
-    #     access_token_url='https://api.twitter.com/oauth/access_token',
-    #     authorize_url='https://api.twitter.com/oauth/authenticate',
-    #     app_key='TWITTER'
-    # )
-
     #sorting the dictionary into a list of tuples
     sig_subtext = []
     for key in sorted(payload.iterkeys()):
