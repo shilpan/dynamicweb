@@ -2,7 +2,6 @@ import os
 import requests
 import time
 import urllib
-from flask_oauthlib.client import OAuth
 from flask import Flask, request
 
 app = Flask(__name__)   # create our flask app
