@@ -2,6 +2,7 @@ import os
 import requests
 import time
 import urllib
+from flask_oauthlib.client import OAuth
 from flask import Flask, request
 
 app = Flask(__name__)   # create our flask app
@@ -21,18 +22,35 @@ def sign_request(base_signature):
 @app.route("/")
 def index():
     curr_time = int(time.mktime(time.gmtime()))
-    payload = {'oauth_consumer_key': 'e5631275a75f4efa955a4f2fc2508706',
-                      'oauth_nonce': 'abc' + str(curr_time),
+
+    payload = {'oauth_nonce': 'abc' + str(curr_time),
                       'oauth_signature_method': 'HMAC-SHA1',
                       'oauth_timestamp':  curr_time,
                       'oauth_version': 1.0,
                       'food_id': 33691,
                       'method': 'food.get'}
-    signature_text = 'POST&http%3A%2F%2Fplatform.fatsecret.com%2Frest%2Fserver.api&' + urllib.quote(urllib.urlencode(payload, True))
+
+    # oauth = OAuth()
+    # fat_secret = oauth.remote_app(
+    #     'fat_secret',
+    #     consumer_key='e5631275a75f4efa955a4f2fc2508706',
+    #     consumer_secret='fb23f2f838dd4a009a70ccb7f283f138',
+    #     request_token_params = payload
+    #     base_url='https://api.twitter.com/1/',
+    #     request_token_url='https://api.twitter.com/oauth/request_token',
+    #     access_token_url='https://api.twitter.com/oauth/access_token',
+    #     authorize_url='https://api.twitter.com/oauth/authenticate',
+    #     app_key='TWITTER'
+    # )
+
+    #sorting the dictionary into a list of tuples
+    sig_subtext = []
+    for key in sorted(payload.iterkeys()):
+      sig_subtext.append((key, payload[key]))
+
+    signature_text = 'POST&http%3A%2F%2Fplatform.fatsecret.com%2Frest%2Fserver.api&' + urllib.quote(urllib.urlencode(sig_subtext))
     payload['oauth_signature'] = urllib.quote(sign_request(signature_text))
     r = requests.post("http://platform.fatsecret.com/rest/server.api", data=payload)
-    print signature_text
-    print r.text
 
     return "<p>" + r.text+ "</p>"
 
